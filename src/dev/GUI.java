@@ -1,6 +1,7 @@
 package dev;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -51,12 +52,13 @@ public class GUI implements Runnable {
 	}
 	
 	public void init() {
-		rocket = new Rocket(this, 200, height-30, 130f);
-		missile = new Missile(this, 0, height-500, 100f);
+		rocket = new Rocket(this, 200, height-30, 130f, 40f, Color.darkGray);
+		missile = new Missile(this, 0, height-500, 100f, 10f, Color.blue);
 	}
 	
 	public void tick() {
 		rocket.tick();
+		rocket.update();
 		missile.tick();
 	}
 	
