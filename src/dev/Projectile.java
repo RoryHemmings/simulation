@@ -11,7 +11,8 @@ import dev.physics.Vector;
 public class Projectile {
 
 	protected GUI gui;
-	protected float x, y, width = 25, height = 10, startY, frames = 0, angle, currentRot;
+	protected boolean hasLaunched = false;
+	protected float x, y, width = 25, height = 10, startY, startX, frames = 0, angle, currentRot;
 	protected float time = 0;
 	protected float xVel, yVel;
 	protected float lastY, deltaY = 0;
@@ -28,35 +29,38 @@ public class Projectile {
 		this.x = x;
 		this.y = y;
 		lastY = y;
-		this.startY = y;
+		startX = x;
+		startY = y;
 		this.angle = angle;
 		this.xVel = (float) Math.cos(Math.toRadians(angle));
 		this.yVel = (float) -Math.sin(Math.toRadians(angle));
 		this.power = power;
 		this.color = color;
-		
+
 		hitBox = new Rectangle((int) x, (int) y, (int) width, (int) height);
 	}
 
 	public void tick() {
-		if (!hitFloor) {
-			frames += 1;
-			time = frames * gui.getDeltaTime();
-			float xSpeed = xVel * power;
-			float ySpeed = yVel * power;
-			x = xSpeed * time;
-			y = (float) startY - (ySpeed * time + ((-Physics.gravity / 2) * (time * time)));
+		if (hasLaunched) {
+			if (!hitFloor) {
+				frames += 1;
+				time = frames * gui.getDeltaTime();
+				float xSpeed = xVel * power;
+				float ySpeed = yVel * power;
+				x = (xSpeed * time) + startX;
+				y = (float) startY - (ySpeed * time + ((-Physics.gravity / 2) * (time * time)));
 
-			if ((y + height) > gui.getHeight()) {
-				kill();
+				if ((y + height) > gui.getHeight()) {
+					kill();
+				}
+
+				if ((int) (frames) % 10 == 0) {
+					trajectory.add(new Vector((int) x, (int) y));
+				}
 			}
 
-			if ((int) (frames) % 10 == 0) {
-				trajectory.add(new Vector((int) x, (int) y));
-			}
+			hitBox = new Rectangle((int) x, (int) y, (int) width, (int) height);
 		}
-	
-		hitBox = new Rectangle((int) x, (int) y, (int) width, (int) height);
 	}
 
 	public void kill() {
