@@ -45,10 +45,8 @@ public class Projectile {
 			if (!hitFloor) {
 				frames += 1;
 				time = frames * gui.getDeltaTime();
-				float xSpeed = xVel * power;
-				float ySpeed = yVel * power;
-				x = (xSpeed * time) + startX;
-				y = (float) startY - (ySpeed * time + ((-Physics.gravity / 2) * (time * time)));
+				x = getXAt(time);
+				y = getYAt(time);
 
 				if ((y + height) > gui.getHeight()) {
 					kill();
@@ -61,6 +59,16 @@ public class Projectile {
 
 			hitBox = new Rectangle((int) x, (int) y, (int) width, (int) height);
 		}
+	}
+	
+	public float getXAt(float time) {
+		float xSpeed = xVel * power;
+		return (xSpeed * time) + startX;
+	}
+	
+	public float getYAt(float time) {
+		float ySpeed = yVel * power;
+		return (float) startY - (ySpeed * time + ((-Physics.gravity / 2) * (time * time)));
 	}
 
 	public void kill() {
